@@ -8,7 +8,7 @@ using MovieDatabase.Models;
 namespace MovieDatabase.Migrations
 {
     [DbContext(typeof(MovieContext))]
-    [Migration("20220127050234_Initial")]
+    [Migration("20220127055605_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,6 +35,9 @@ namespace MovieDatabase.Migrations
                     b.Property<string>("LentTo")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("MovieID")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Notes")
                         .HasColumnType("TEXT");
 
@@ -50,6 +53,41 @@ namespace MovieDatabase.Migrations
                     b.HasKey("MovieId");
 
                     b.ToTable("responses");
+
+                    b.HasData(
+                        new
+                        {
+                            MovieId = 1,
+                            Category = "Family",
+                            Director = "Pierre Cofflin, Chris Renaud",
+                            Edited = false,
+                            MovieID = 0,
+                            Rating = "PG",
+                            Title = "Despicable Me",
+                            Year = (ushort)2010
+                        },
+                        new
+                        {
+                            MovieId = 2,
+                            Category = "Action/Sci-Fi",
+                            Director = "Christopher Nolan",
+                            Edited = false,
+                            MovieID = 0,
+                            Rating = "PG-13",
+                            Title = "Inception",
+                            Year = (ushort)2010
+                        },
+                        new
+                        {
+                            MovieId = 3,
+                            Category = "Romance/Comedy",
+                            Director = "Gil Junger",
+                            Edited = false,
+                            MovieID = 0,
+                            Rating = "PG-13",
+                            Title = "10 Things I Hate About You",
+                            Year = (ushort)1999
+                        });
                 });
 #pragma warning restore 612, 618
         }

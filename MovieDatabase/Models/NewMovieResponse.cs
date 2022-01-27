@@ -10,7 +10,7 @@ namespace MovieDatabase.Models
     {
         [Key]
         [Required]
-        public int MovieId { get; set; }
+        public int MovieID { get; set; }
         public string Category { get; set; }
         public string Title { get; set; }
         public ushort Year { get; set; }
