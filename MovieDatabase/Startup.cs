@@ -29,7 +29,7 @@ namespace MovieDatabase
 
             services.AddDbContext<MovieContext>(options =>
             {
-                options.UseSqlite(Configuration.GetConnectionString("Miss4Connection"));
+                options.UseSqlite(Configuration["ConnectionStrings:Miss4Connection"]);
             });
         }
 

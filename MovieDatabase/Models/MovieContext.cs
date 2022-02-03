@@ -14,15 +14,28 @@ namespace MovieDatabase.Models
             //Leave blank for now
         }
         public DbSet<NewMovieResponse> responses { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder nb)
         {
+
+            nb.Entity<Category>().HasData(
+                new Category { CategoryID = 1, CategoryName="Action/Adventure"},
+                new Category { CategoryID = 2, CategoryName = "Comedy" },
+                new Category { CategoryID = 3, CategoryName = "Drama" },
+                new Category { CategoryID = 4, CategoryName = "Family" },
+                new Category { CategoryID = 5, CategoryName = "Horror/Suspense" },
+                new Category { CategoryID = 6, CategoryName = "Micellaneous" },
+                new Category { CategoryID = 7, CategoryName = "Television" },
+                new Category { CategoryID = 8, CategoryName = "VHS" }
+            );
+
             nb.Entity<NewMovieResponse>().HasData(
 
                 new NewMovieResponse
                 {
                     MovieID = 1,
-                    Category = "Family",
+                    CategoryID = 4,
                     Title = "Despicable Me",
                     Year = 2010,
                     Director = "Pierre Cofflin, Chris Renaud",
@@ -32,7 +45,7 @@ namespace MovieDatabase.Models
                 new NewMovieResponse
                 {
                     MovieID = 2,
-                    Category = "Action/Sci-Fi",
+                    CategoryID = 1,
                     Title = "Inception",
                     Year = 2010,
                     Director = "Christopher Nolan",
@@ -42,7 +55,7 @@ namespace MovieDatabase.Models
                 new NewMovieResponse
                 {
                     MovieID = 3,
-                    Category = "Romance/Comedy",
+                    CategoryID = 3,
                     Title = "10 Things I Hate About You",
                     Year = 1999,
                     Director = "Gil Junger",

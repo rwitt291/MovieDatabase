@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MovieDatabase.Models;
 using System;
@@ -11,13 +12,11 @@ namespace MovieDatabase.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private MovieContext _movieContext { get; set; }
 
         //Constructor
-        public HomeController(ILogger<HomeController> logger, MovieContext someName)
+        public HomeController(MovieContext someName)
         {
-            _logger = logger;
             _movieContext = someName;
         }
 
@@ -29,16 +28,28 @@ namespace MovieDatabase.Controllers
         [HttpGet]
         public IActionResult FillOutMovieForm ()
         {
+            ViewBag.Categories = _movieContext.Categories.ToList();
+            
             return View("MovieForm");
         }
 
         [HttpPost]
         public IActionResult FillOutMovieForm(NewMovieResponse ar)
         {
-            _movieContext.Add(ar);
-            _movieContext.SaveChanges();
+            if (ModelState.IsValid)
+            {
+                _movieContext.Add(ar);
+                _movieContext.SaveChanges();
 
-            return View("Confirmation", ar);
+                return View("Confirmation", ar);
+            }
+            else
+            {
+                ViewBag.Categories = _movieContext.Categories.ToList();
+
+                return View(ar);
+            }
+
         }
 
         public IActionResult Podcast ()
@@ -46,16 +57,47 @@ namespace MovieDatabase.Controllers
             return View("Podcast");
         }
 
-
-        public IActionResult Privacy()
+        public IActionResult MovieList ()
         {
-            return View();
+            var applications = _movieContext.responses
+                .Include(x => x.Category)
+                .OrderBy(x => x.Category.CategoryName)
+                .ToList();
+            return View(applications);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpGet]
+        public IActionResult Edit (int movieid)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            ViewBag.Categories = _movieContext.Categories.ToList();
+
+            var application = _movieContext.responses.Single(x => x.MovieID == movieid);
+
+            return View("MovieForm", application);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(NewMovieResponse movie)
+        {
+            _movieContext.Update(movie);
+            _movieContext.SaveChanges();
+
+            return RedirectToAction("MovieList");
+        }
+
+        [HttpGet]
+        public IActionResult Delete (int movieid)
+        {
+            var application = _movieContext.responses.Single(x => x.MovieID == movieid);
+            return View(application);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(NewMovieResponse ar)
+        {
+            _movieContext.responses.Remove(ar);
+            _movieContext.SaveChanges();
+            return RedirectToAction("MovieList");
         }
     }
 }
